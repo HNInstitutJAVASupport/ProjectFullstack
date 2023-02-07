@@ -1,0 +1,58 @@
+services:
+  #DataBase service using MySql image
+  fullmysql:
+    #From what image pull the service
+    image: mysql:latest
+    #Name the container
+    container_name: fullmysql
+    #Environment variables
+    environment:
+      MYSQL_DATABASE: profile_management
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    #Publishing ports (first one for accessing from outside of docker and the seconde from inside docker)
+    ports:
+      - "3307:3307"  
+
+  #FrontEnd service using our Angular project image
+  fullangular:
+    #Build the image from the Dockerfile in indicated path
+    build: ./angular/ProfileManagement
+    #name the image
+    image: fullangular
+    container_name: fullangular
+    ports:
+      - "4200:80"
+
+  fullspringboot:
+    container_name: fullspringboot
+    build:
+     context: ./springboot
+     dockerfile: Dockerfile
+    image: fullspringboot
+    working_dir: /springboot/ProfileManagement
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://fullmysql:3306/profile_management?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8080:8080"
+    #Make Maven compile the executable
+    command: mvn clean spring-boot:run
+    #Make the executable (all data in fact) persite in the container
+    volumes:
+      - ./springboot:/springboot
+    #Make the service depend on the DataBase service  
+    depends_on:
+      - fullmysql 
+     
+  #PhpMyAdmin Service to check DB host in the DataBase service
+  fullpma:
+    image: phpmyadmin
+    container_name: fullpma
+    ports:
+     - '8081:80'
+    environment:
+      PMA_HOST: fullmysql
+    depends_on:
+     - fullmysql
