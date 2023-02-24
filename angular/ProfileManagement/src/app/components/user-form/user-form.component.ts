@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TypeUser } from 'src/app/model/type-user';
 import { User } from 'src/app/model/user';
-import { ProfileService } from 'src/app/service/profile.service';
+import { UserService } from 'src/app/service/user.service';
+import { TypeUserService } from 'src/app/service/type-user.service';
 
 @Component({
   selector: 'app-user-form',
@@ -17,11 +18,11 @@ export class UserFormComponent implements OnInit {
   
   errormessage!:string;
 
-  constructor(private service:ProfileService,
+  constructor(private userService:UserService, private typeUserService:TypeUserService,
     private activeRoute:ActivatedRoute,private router:Router){}
 
   ngOnInit() {
-        this.service.getTypeUser().subscribe(response =>{
+        this.typeUserService.getTypeUser().subscribe(response =>{
         this.typeUser = response;
         });
        
@@ -29,14 +30,14 @@ export class UserFormComponent implements OnInit {
     this.activeRoute.params.subscribe(params =>{
       let id: number = params['id'];
         if(id){
-        this.service.getUserById(id).
+        this.userService.getUserById(id).
         subscribe(response=>this.users=response)
         }    
     });
   }
 
   onSubmit(){
-    this.service.createUser(this.users).
+    this.userService.createUser(this.users).
     subscribe(response =>{this.router.navigate(['/users'])}
     ,(error)=>{
       this.errormessage="Email already exists."

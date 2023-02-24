@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TypeUser } from 'src/app/model/type-user';
-import { ProfileService } from 'src/app/service/profile.service';
+import { TypeUserService } from 'src/app/service/type-user.service';
 
 @Component({
   selector: 'app-type-user-form',
@@ -11,20 +11,20 @@ export class TypeUserFormComponent implements OnInit {
   typeUser:TypeUser=new TypeUser();
   errormessage!:any;
 
-  constructor(private service:ProfileService,
+  constructor(private typeUserService:TypeUserService,
     private activeRoute:ActivatedRoute,private router:Router){}
 
 ngOnInit(){
   this.activeRoute.params.subscribe(params =>{
     let id: number = params['id'];
     if(id){
-      this.service.getTypeUserById(id).
+      this.typeUserService.getTypeUserById(id).
       subscribe(response=>this.typeUser=response)
     }
   })
 }
   onSubmit(){
-      this.service.createTypeUser(this.typeUser).
+      this.typeUserService.createTypeUser(this.typeUser).
       subscribe(r =>{
         this.router.navigate(['/typeuser'])
       },(error)=>{

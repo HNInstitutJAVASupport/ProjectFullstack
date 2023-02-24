@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TypeUser } from 'src/app/model/type-user';
 import { User } from 'src/app/model/user';
-import { ProfileService } from 'src/app/service/profile.service';
+import { UserService } from 'src/app/service/user.service';
+import { TypeUserService } from 'src/app/service/type-user.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -12,18 +13,18 @@ export class UserProfileComponent implements OnInit {
   users:User=new User();
 
   typeUser:TypeUser[]=[];
-  constructor(private service:ProfileService,
+  constructor(private userService:UserService, private typeUserService:TypeUserService,
     private activeRoute:ActivatedRoute,private router:Router){}
 
   ngOnInit() {
-        this.service.getTypeUser().subscribe(response =>{
+        this.typeUserService.getTypeUser().subscribe(response =>{
         this.typeUser = response;
         });
        
 
     this.activeRoute.params.subscribe(params =>{
       let id: number = params['id'];  
-        this.service.getUserById(id).
+        this.userService.getUserById(id).
         subscribe(response=>this.users=response)      
     });
   }

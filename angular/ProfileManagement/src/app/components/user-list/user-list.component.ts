@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/model/user';
-import { ProfileService } from 'src/app/service/profile.service';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-user-list',
@@ -15,16 +15,16 @@ export class UserListComponent implements OnInit {
 
   optionSort: { property: string | null, order: string } = { property: null, order: 'asc' }
   
-  constructor(private service:ProfileService){}
+  constructor(private userService:UserService){}
 
   ngOnInit() {
-      this.service.getUsers().subscribe(response=>{
+      this.userService.getUsers().subscribe(response=>{
         this.users = response;
       })
   }
 
   deleteUser(id:number){
-    this.service.deleteUser(id).subscribe(response=>{
+    this.userService.deleteUser(id).subscribe(response=>{
       this.users=this.users.filter(user=>user.id!=id)
     })
   }

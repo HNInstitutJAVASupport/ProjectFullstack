@@ -9,7 +9,8 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { TypeUserListComponent } from './components/type-user-list/type-user-list.component';
 import { TypeUserFormComponent } from './components/type-user-form/type-user-form.component';
-import { ProfileService } from './service/profile.service';
+import { UserService } from './service/user.service';
+import { TypeUserService } from './service/type-user.service';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
@@ -28,7 +29,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     HttpClientModule,
     FormsModule
   ],
-  providers: [ProfileService],
+  providers: [UserService, TypeUserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
